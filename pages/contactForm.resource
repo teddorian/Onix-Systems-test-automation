@@ -1,9 +1,11 @@
 *** Settings ***
 Library    SeleniumLibrary
 Resource   ../common_data.resource
+# The form is reached through the home page hero button, so that locator's
+# owner is imported explicitly instead of relying on the suite to load it.
+Resource   homePage.resource
 
 *** Variables ***
-${FORM_HEADING}      xpath=//*[contains(normalize-space(), 'Tell us about your product idea')]
 ${SUBMIT_BUTTON}     xpath=//button[normalize-space()='Get in touch']
 @{REQUIRED_FIELDS}   name    email    company    country
 
