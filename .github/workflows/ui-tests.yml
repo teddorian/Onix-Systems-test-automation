@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -57,6 +61,37 @@ jobs:
           " || echo 'no output.xml produced'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish failure reason as commit status
+        if: failure()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          python - > payload.json <<'SCRIPT'
+          import glob, json, os, xml.etree.ElementTree as ET
+          reason = "robot produced no output.xml"
+          for f in glob.glob("results/output.xml"):
+              for test in ET.parse(f).getroot().iter("test"):
+                  status = test.find("status")
+                  if status is not None and status.get("status") == "FAIL":
+                      reason = "%s: %s" % (test.get("name"), (status.text or "").strip())
+                      break
+              break
+          print(json.dumps({
+              "state": "failure",
+              "context": "robot/first-failure",
+              "description": " ".join(reason.split())[:130],
+          }))
+          SCRIPT
+          cat payload.json
+          curl -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/statuses/$SHA" \
+            --data @payload.json > /dev/null
 
       - name: Upload test report
         if: always()
