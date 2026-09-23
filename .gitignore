@@ -16,3 +16,6 @@ venv/
 # IDE
 .idea/
 .vscode/
+
+# CI output dir
+results/

@@ -1,5 +1,7 @@
 # Onix Systems — UI Test Automation
 
+[![UI Tests](https://github.com/teddorian/Onix-Systems-test-automation/actions/workflows/ui-tests.yml/badge.svg)](https://github.com/teddorian/Onix-Systems-test-automation/actions/workflows/ui-tests.yml)
+
 UI-автотесты для публичного сайта [onix-systems.com](https://onix-systems.com),
 написанные на Robot Framework + SeleniumLibrary.
 
@@ -44,3 +46,17 @@ robot tests/openCalculator.robot
 
 Отчёты (`log.html`, `report.html`, `output.xml`) и скриншоты падений
 генерируются в рабочей директории и намеренно не версионируются.
+
+## CI
+
+Тесты запускаются в GitHub Actions при каждом push и pull request в `main`,
+а также вручную через **Actions → UI Tests → Run workflow**.
+
+Раннер (`ubuntu-latest`) ставит зависимости из `requirements.txt`, Chrome
+с совместимым ChromeDriver, и гоняет набор под виртуальным дисплеем Xvfb —
+поэтому `.robot`-файлы не требуют headless-флага и локальный запуск ничем
+не отличается от CI.
+
+Отчёты Robot Framework (`log.html`, `report.html`, `output.xml`) публикуются
+как артефакт сборки `robot-framework-results` — в том числе для упавших
+прогонов.
