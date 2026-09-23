@@ -13,14 +13,26 @@ ${SERVICES_MENU}      xpath=//header//button[.//span[normalize-space()='Services
 
 *** Keywords ***
 Open Home Page
-    Open Browser    ${BASE_URL}    ${BROWSER}    options=${CHROME_OPTIONS}
-    Set Selenium Timeout    ${TIMEOUT}
-    Accept Cookies If Present
+    Open Page    ${BASE_URL}
 
 Open Calculator Page
-    Open Browser    ${CALCULATOR_URL}    ${BROWSER}    options=${CHROME_OPTIONS}
+    Open Page    ${CALCULATOR_URL}
+
+Open Page
+    [Arguments]    ${url}
+    Open Browser    ${url}    ${BROWSER}    options=${CHROME_OPTIONS}
     Set Selenium Timeout    ${TIMEOUT}
+    Wait For Document Ready
     Accept Cookies If Present
+
+Wait For Document Ready
+    [Documentation]    CI runners are slower than a laptop, so give the bundle time
+    ...    to finish before asserting on anything it renders.
+    Wait Until Keyword Succeeds    ${TIMEOUT}    1s    Document Should Be Complete
+
+Document Should Be Complete
+    ${state}=    Execute Javascript    return document.readyState;
+    Should Be Equal    ${state}    complete
 
 Accept Cookies If Present
     [Documentation]    The CookieYes banner is injected asynchronously and does not

@@ -39,6 +39,25 @@ jobs:
           -v 'CHROME_OPTIONS:add_argument("--headless=new"); add_argument("--window-size=1920,1080")'
           tests/
 
+      - name: Summarise failures
+        if: failure()
+        run: |
+          {
+            echo '## Robot Framework failures'
+            echo
+            echo '```'
+            python -c "
+          import glob, xml.etree.ElementTree as ET
+          for f in glob.glob('results/output.xml'):
+              for test in ET.parse(f).getroot().iter('test'):
+                  st = test.find('status')
+                  if st is not None and st.get('status') == 'FAIL':
+                      print('FAIL:', test.get('name'))
+                      print('   ', (st.text or '').strip()[:500])
+          " || echo 'no output.xml produced'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
