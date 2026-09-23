@@ -33,7 +33,11 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y xvfb
 
       - name: Run Robot Framework UI tests
-        run: xvfb-run --auto-servernum robot -d results tests/
+        run: >
+          xvfb-run --auto-servernum
+          robot -d results
+          -v 'CHROME_OPTIONS:add_argument("--headless=new"); add_argument("--window-size=1920,1080")'
+          tests/
 
       - name: Upload test report
         if: always()

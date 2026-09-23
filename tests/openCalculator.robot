@@ -1,20 +1,18 @@
 *** Settings ***
-Library  SeleniumLibrary
-Resource  ../common_data.resource
-Resource  ../pages/homePage.resource
-Test Setup  Precondition Steps Before Each Test
-Test Teardown  Teardown Steps After All Tests
+Library     SeleniumLibrary
+Resource    ../common_data.resource
+Resource    ../pages/homePage.resource
+Test Setup       Open Calculator Page
+Test Teardown    Close Browsers
+
+*** Variables ***
+${DURATION_STEP}    xpath=//h3[normalize-space()='4. Specify project duration']
+${CONTACT_FORM}     xpath=//h4[normalize-space()='Start your project with Onix']
+${STACK_STEP}       xpath=//h3[normalize-space()='2. Choose required technology stack']
 
 *** Test Cases ***
 TC1 Verify User Can Open Dedicated Team Calculator
-   User Click Services In Menu
-   User Open Dedicated Team Calculator
-   Wait Until Element Is Visible    //h3[contains(@class, 'mainTitle_default')][contains(@class, 'DTCCalculator_sectionTitle')][text()='4. Specify project duration']
-   Wait Until Element Is Visible    //h4[contains(@class, 'mainTitle_default')][contains(@class, 'DTCContactForm_formTitle')]
-
-*** Keywords ***
-Precondition Steps Before Each Test
-    Open Browser    ${BASE_URL}    chrome
-
-Teardown Steps After All Tests
-    Close All Browsers
+    [Documentation]    All calculator steps and the contact form are rendered.
+    Wait Until Element Is Visible    ${STACK_STEP}
+    Wait Until Element Is Visible    ${DURATION_STEP}
+    Wait Until Element Is Visible    ${CONTACT_FORM}

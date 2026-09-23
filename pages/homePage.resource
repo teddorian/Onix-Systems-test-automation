@@ -1,22 +1,37 @@
-
 *** Settings ***
 Library    SeleniumLibrary
+Resource   ../common_data.resource
 
 *** Variables ***
-${SERVICES}    //div[contains(@class, 'navLink_link__IeqdD') and contains(text(), 'SERVICES')]
-${SPEAK_TO_EXPERT}    //span[text()='Speak to our expert']
+# The site is built with utility CSS classes that change on every deploy,
+# so locators are anchored to visible text and stable data attributes only.
+${COOKIE_ACCEPT}      xpath=//button[contains(@class, 'cky-btn-accept')]
+${TALK_TO_EXPERT}     xpath=//button[normalize-space()='Talk to an expert']
+${SEE_OUR_CASES}      xpath=//button[normalize-space()='See our cases']
+${CASE_STUDIES_LINK}  xpath=//a[normalize-space()='View case studies']
+${SERVICES_MENU}      xpath=//header//button[.//span[normalize-space()='Services']]
 
 *** Keywords ***
-Verify User Can Send Contact Form
-    Click Element    ${SPEAK_TO_EXPERT}
-    Input Text    //input[@name='name' and @type='text' and @required and @value='']   testName
-    Input Text    //input[@name="company"][@type="text"][@required][@value]   testCompany
-    Input Text    (//textarea[@name="message"][@required])[1]   testDetails
-    Input Text    (//input[@name='email'][@type="text"])[1]   test@test.com
-    Click Element    //div[contains(@class, 'contactForm_btnWrapper')]//span[text()='Get in touch']
+Open Home Page
+    Open Browser    ${BASE_URL}    ${BROWSER}    options=${CHROME_OPTIONS}
+    Set Selenium Timeout    ${TIMEOUT}
+    Accept Cookies If Present
 
-#User Open links from Menu
-User Click Services In Menu
-    Click Element    ${SERVICES}
-User Open Dedicated Team Calculator
-    Click Element    //a[contains(text(), 'Dedicated Team Calculator')]
+Open Calculator Page
+    Open Browser    ${CALCULATOR_URL}    ${BROWSER}    options=${CHROME_OPTIONS}
+    Set Selenium Timeout    ${TIMEOUT}
+    Accept Cookies If Present
+
+Accept Cookies If Present
+    [Documentation]    The CookieYes banner is injected asynchronously and does not
+    ...    always appear (it depends on a previously stored consent cookie), so its
+    ...    absence must not fail the test.
+    ${shown}=    Run Keyword And Return Status
+    ...    Wait Until Element Is Visible    ${COOKIE_ACCEPT}    timeout=10s
+    IF    ${shown}
+        Click Element    ${COOKIE_ACCEPT}
+        Wait Until Element Is Not Visible    ${COOKIE_ACCEPT}    timeout=10s
+    END
+
+Close Browsers
+    Close All Browsers

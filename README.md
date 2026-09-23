@@ -11,7 +11,7 @@ UI-автотесты для публичного сайта [onix-systems.com](
 common_data.resource        # общие переменные (BASE_URL)
 pages/                      # page objects: локаторы и keywords
   homePage.resource
-  accordion_services.robot
+  cooperation_models.resource
 tests/                      # тест-кейсы
   HomePageInteractions.robot
   openCalculator.robot
@@ -43,6 +43,17 @@ robot tests/
 ```bash
 robot tests/openCalculator.robot
 ```
+
+Headless (так же, как в CI):
+
+```bash
+robot -v 'CHROME_OPTIONS:add_argument("--headless=new"); add_argument("--window-size=1920,1080")' tests/
+```
+
+Сайт верстается utility-классами, которые меняются при каждом деплое, поэтому
+локаторы привязаны только к видимому тексту и устойчивым data-атрибутам.
+Размер окна задаётся явно: секция моделей сотрудничества — горизонтальная
+«гармошка», и при узком окне её панели схлопываются.
 
 Отчёты (`log.html`, `report.html`, `output.xml`) и скриншоты падений
 генерируются в рабочей директории и намеренно не версионируются.
