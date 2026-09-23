@@ -27,11 +27,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Chrome and matching ChromeDriver
+      - name: Install Chrome
         uses: step-security/setup-chrome@v2
         with:
-          install-chromedriver: true
           install-dependencies: true
+        # ChromeDriver is deliberately not installed here: Selenium Manager
+        # resolves a driver that matches the browser it actually launches,
+        # whereas a separately installed one drifts out of sync and fails with
+        # SessionNotCreatedException.
 
       - name: Install Xvfb
         run: sudo apt-get update -y && sudo apt-get install -y xvfb

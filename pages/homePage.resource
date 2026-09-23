@@ -10,6 +10,9 @@ ${TALK_TO_EXPERT}     xpath=//button[normalize-space()='Talk to an expert']
 ${SEE_OUR_CASES}      xpath=//button[normalize-space()='See our cases']
 ${CASE_STUDIES_LINK}  xpath=//a[normalize-space()='View case studies']
 ${SERVICES_MENU}      xpath=//header//button[.//span[normalize-space()='Services']]
+${PAGE_HEADING}       xpath=//h1
+${META_DESCRIPTION}   css=meta[name="description"]
+${CANONICAL_LINK}     css=link[rel="canonical"]
 
 *** Keywords ***
 Open Home Page
@@ -47,3 +50,8 @@ Accept Cookies If Present
 
 Close Browsers
     Close All Browsers
+
+Verify Navigation Section Is Present
+    [Arguments]    ${section}
+    Wait Until Element Is Visible
+    ...    xpath=//header//span[normalize-space()='${section}']
