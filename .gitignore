@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Robot Framework run artifacts
+log.html
+report.html
+output.xml
+selenium-screenshot-*.png
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
