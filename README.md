@@ -13,6 +13,8 @@ pages/                      # page objects: locators and keywords
   homePage.resource
   cooperation_models.resource
   contactForm.resource
+  testimonials.resource
+  faq.resource
 tests/                      # test cases
   HomePageInteractions.robot
   openCalculator.robot
@@ -108,6 +110,10 @@ Dedicated Team Calculator: the calculator steps and the request form render.
 - 2 of 65 images on the home page have no `alt` attribute — an
   accessibility violation. No test was added for this deliberately, to keep
   the suite green; it's a bug report, not a test case.
+- The FAQ accordion cannot be used from the keyboard: its items have no
+  `role`, `tabindex` or `aria-expanded`, nothing in the section is
+  focusable, and Enter or Space does not open an item. Screen readers are not
+  told whether an item is expanded.
 - The contact-form modal has neither `role="dialog"` nor `aria-modal`, so
   assistive technology is not told that a dialog has opened.
 - An invalid email (e.g. `not-an-email`) gets no visual feedback: no inline
