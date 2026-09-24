@@ -85,6 +85,7 @@ Home page:
 | TC4 | All main-menu sections are present |
 | TC5 | The hero "See our cases" button navigates to `/case-studies` |
 | TC6 | The contact form exposes all required fields |
+| TC7 | Testimonials slider: "Previous" is disabled on the first slide and enabled after stepping forward |
 
 Dedicated Team Calculator: the calculator steps and the request form render.
 

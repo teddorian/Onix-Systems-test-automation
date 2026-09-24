@@ -13,14 +13,6 @@ Cooperation Model Heading
     [Arguments]    ${title}
     RETURN    xpath=//h3[normalize-space()='${title}']
 
-Scroll To Center
-    [Documentation]    The section reveals itself on scroll, and SeleniumLibrary's
-    ...    Scroll Element Into View aligns to the top edge, which is not enough to
-    ...    trigger it. Centring the element is.
-    [Arguments]    ${locator}
-    ${element}=    Get WebElement    ${locator}
-    Execute Javascript    arguments[0].scrollIntoView({block: "center"});    ARGUMENTS    ${element}
-
 Open Cooperation Model
     [Documentation]    Models live in a horizontal accordion: only the active panel
     ...    has width, so every other heading is clipped and reported as not visible

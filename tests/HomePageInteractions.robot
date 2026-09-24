@@ -5,6 +5,7 @@ Resource    ../common_data.resource
 Resource    ../pages/homePage.resource
 Resource    ../pages/cooperation_models.resource
 Resource    ../pages/contactForm.resource
+Resource    ../pages/testimonials.resource
 Test Setup       Open Home Page
 Test Teardown    Close Browsers
 
@@ -65,3 +66,11 @@ TC6 Verify Contact Form Exposes All Required Fields
     END
     Element Should Be Visible    xpath=//textarea[@name='message']
     Element Should Be Visible    ${SUBMIT_BUTTON}
+
+TC7 Verify Testimonials Slider Previous Button Disabled On First Slide
+    [Documentation]    The slider opens on its first slide, so stepping back is
+    ...    not possible until the visitor has moved forward at least once.
+    Open Testimonials Slider
+    Previous Slide Button Should Be Disabled
+    Click Next Slide
+    Previous Slide Button Should Be Enabled
