@@ -2,28 +2,28 @@
 
 [![UI Tests](https://github.com/teddorian/Onix-Systems-test-automation/actions/workflows/ui-tests.yml/badge.svg)](https://github.com/teddorian/Onix-Systems-test-automation/actions/workflows/ui-tests.yml)
 
-UI-автотесты для публичного сайта [onix-systems.com](https://onix-systems.com),
-написанные на Robot Framework + SeleniumLibrary.
+UI test automation for the public [onix-systems.com](https://onix-systems.com) website,
+written with Robot Framework + SeleniumLibrary.
 
-## Структура
+## Structure
 
 ```
-common_data.resource        # общие переменные (BASE_URL)
-pages/                      # page objects: локаторы и keywords
+common_data.resource        # shared variables (BASE_URL, etc.)
+pages/                      # page objects: locators and keywords
   homePage.resource
   cooperation_models.resource
   contactForm.resource
-tests/                      # тест-кейсы
+tests/                      # test cases
   HomePageInteractions.robot
   openCalculator.robot
 ```
 
-## Требования
+## Requirements
 
 - Python 3.12+
-- Google Chrome (ChromeDriver подтягивается Selenium Manager автоматически)
+- Google Chrome (ChromeDriver is resolved automatically by Selenium Manager)
 
-## Установка
+## Installation
 
 ```bash
 python3 -m venv .venv
@@ -31,76 +31,78 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Запуск
+## Running
 
-Все тесты:
+All tests:
 
 ```bash
 robot tests/
 ```
 
-Один набор:
+A single suite:
 
 ```bash
 robot tests/openCalculator.robot
 ```
 
-Headless (так же, как в CI):
+Headless (same as CI):
 
 ```bash
 robot -v 'CHROME_OPTIONS:add_argument("--headless=new"); add_argument("--window-size=1920,1080")' tests/
 ```
 
-Сайт верстается utility-классами, которые меняются при каждом деплое, поэтому
-локаторы привязаны только к видимому тексту и устойчивым data-атрибутам.
-Размер окна задаётся явно: секция моделей сотрудничества — горизонтальная
-«гармошка», и при узком окне её панели схлопываются.
+The site is built with utility CSS classes that change on every deploy, so
+locators are anchored only to visible text and stable data attributes. The
+window size is set explicitly: the cooperation-models section is a
+horizontal accordion, and its panels collapse at narrow widths.
 
-Отчёты (`log.html`, `report.html`, `output.xml`) и скриншоты падений
-генерируются в рабочей директории и намеренно не версионируются.
+Reports (`log.html`, `report.html`, `output.xml`) and failure screenshots
+are generated in the working directory and are deliberately not versioned.
 
 ## CI
 
-Тесты запускаются в GitHub Actions при каждом push и pull request в `main`,
-а также вручную через **Actions → UI Tests → Run workflow**.
+Tests run in GitHub Actions on every push and pull request to `main`, and
+can also be triggered manually via **Actions → UI Tests → Run workflow**.
 
-Раннер (`ubuntu-latest`) ставит зависимости из `requirements.txt`, Chrome
-с совместимым ChromeDriver, и гоняет набор под виртуальным дисплеем Xvfb —
-поэтому `.robot`-файлы не требуют headless-флага и локальный запуск ничем
-не отличается от CI.
+The runner (`ubuntu-latest`) installs dependencies from `requirements.txt`,
+Chrome with a matching ChromeDriver, and runs the suite under a virtual
+display (Xvfb) — so the `.robot` files don't need a headless flag, and a
+local run behaves exactly like CI.
 
-Отчёты Robot Framework (`log.html`, `report.html`, `output.xml`) публикуются
-как артефакт сборки `robot-framework-results` — в том числе для упавших
-прогонов.
+Robot Framework's reports (`log.html`, `report.html`, `output.xml`) are
+published as the `robot-framework-results` build artifact, including for
+failed runs.
 
-## Покрытие
+## Coverage
 
-Главная страница:
+Home page:
 
-| Тест | Что проверяет |
-|------|---------------|
-| TC1 | Смоук: hero-блок и шапка отрисованы, заголовок вкладки |
-| TC2 | Гармошка моделей сотрудничества: все пять раскрываются и показывают описание |
-| TC3 | Метаданные: ровно один H1, непустой description, канонический URL |
-| TC4 | Все разделы главного меню присутствуют |
-| TC5 | Hero-кнопка «See our cases» ведёт на `/case-studies` |
-| TC6 | Контактная форма отдаёт все обязательные поля |
+| Test | What it checks |
+|------|-----------------|
+| TC1 | Smoke: the hero block and header render, the tab title is set |
+| TC2 | Cooperation-models accordion: all five expand and show a description |
+| TC3 | Metadata: exactly one H1, a non-empty description, a canonical URL |
+| TC4 | All main-menu sections are present |
+| TC5 | The hero "See our cases" button navigates to `/case-studies` |
+| TC6 | The contact form exposes all required fields |
 
-Калькулятор выделенной команды: шаги расчёта и форма заявки отрисованы.
+Dedicated Team Calculator: the calculator steps and the request form render.
 
-### Осознанные пробелы
+### Deliberate gaps
 
-- **Форма не отправляется.** Она уходит в реальный отдел продаж, поэтому
-  проверяется только контракт полей. Полный сценарий отправки требует стенда
-  или мок-эндпоинта.
-- **Мобильное меню не покрыто.** Бургер не имеет устойчивого хука, а привязка
-  к utility-классам дала бы флакающий тест.
-- **Консольные ошибки не проверяются.** Страница стабильно логирует ошибки
-  сторонних скриптов (GTM, DoubleClick), на этом фоне проверка бессмысленна.
-- **Битые ссылки не проверяются.** Требует HTTP-слоя поверх UI-набора.
+- **The form is not submitted.** It posts to a real sales inbox, so only the
+  field contract is checked. A full submission scenario would need a test
+  environment or a mock endpoint.
+- **The mobile menu is not covered.** The burger button has no stable hook,
+  and anchoring to utility classes would produce a flaky test.
+- **Console errors are not checked.** The page consistently logs errors from
+  third-party scripts (GTM, DoubleClick), which would make such a check
+  meaningless.
+- **Broken links are not checked.** This would require an HTTP layer on top
+  of the UI suite.
 
-### Найденные дефекты
+### Defects found
 
-- 2 из 65 изображений главной страницы без атрибута `alt` — нарушение
-  доступности. Тест намеренно не добавлен, чтобы набор оставался зелёным;
-  это заявка на баг, а не на автотест.
+- 2 of 65 images on the home page have no `alt` attribute — an
+  accessibility violation. No test was added for this deliberately, to keep
+  the suite green; it's a bug report, not a test case.
