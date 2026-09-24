@@ -6,6 +6,7 @@ Resource    ../pages/homePage.resource
 Resource    ../pages/cooperation_models.resource
 Resource    ../pages/contactForm.resource
 Resource    ../pages/testimonials.resource
+Resource    ../pages/faq.resource
 Test Setup       Open Home Page
 Test Teardown    Close Browsers
 
@@ -74,3 +75,17 @@ TC7 Verify Testimonials Slider Previous Button Disabled On First Slide
     Previous Slide Button Should Be Disabled
     Click Next Slide
     Previous Slide Button Should Be Enabled
+
+TC8 Verify FAQ Items Expand Independently And Toggle
+    [Documentation]    Unlike the cooperation models, FAQ items are independent: opening
+    ...    one leaves the others as they are, and clicking an open item closes it.
+    Open FAQ Section
+    All FAQ Items Should Be Collapsed
+    Toggle FAQ Item    1
+    FAQ Item Should Be Expanded    1
+    Toggle FAQ Item    2
+    FAQ Item Should Be Expanded    2
+    FAQ Item Should Be Expanded    1
+    Toggle FAQ Item    2
+    FAQ Item Should Be Collapsed    2
+    FAQ Item Should Be Expanded    1

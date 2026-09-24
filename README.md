@@ -86,6 +86,7 @@ Home page:
 | TC5 | The hero "See our cases" button navigates to `/case-studies` |
 | TC6 | The contact form exposes all required fields |
 | TC7 | Testimonials slider: "Previous" is disabled on the first slide and enabled after stepping forward |
+| TC8 | FAQ accordion: all items start collapsed, open independently of each other, and a second click collapses an item |
 
 Dedicated Team Calculator: the calculator steps and the request form render.
 
@@ -107,3 +108,9 @@ Dedicated Team Calculator: the calculator steps and the request form render.
 - 2 of 65 images on the home page have no `alt` attribute — an
   accessibility violation. No test was added for this deliberately, to keep
   the suite green; it's a bug report, not a test case.
+- The contact-form modal has neither `role="dialog"` nor `aria-modal`, so
+  assistive technology is not told that a dialog has opened.
+- An invalid email (e.g. `not-an-email`) gets no visual feedback: no inline
+  message and no `aria-invalid`. The submit button stays disabled behind the
+  reCAPTCHA exactly as it does for a valid address, so the error is hidden
+  from the user.
